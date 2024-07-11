@@ -6,6 +6,15 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 export default defineConfig({
   build: {
     outDir: "build",
+    sourcemap: true,
+    rollupOptions: {
+      onLog(level, log, handler) {
+        if (log.cause && (log.cause as any).message === `Can't resolve original location of error.`) {
+          return
+        }
+        handler(level, log)
+      }
+    }
   },
   server: {
     open: true,
