@@ -9,7 +9,7 @@ const Model = () => {
 
   useFrame((_state, delta) => {
     if (modelRef.current) {
-      modelRef.current.rotation.y += delta * 0.2; 
+    //   modelRef.current.rotation.y += delta * 0.2; 
     }
   });
 
