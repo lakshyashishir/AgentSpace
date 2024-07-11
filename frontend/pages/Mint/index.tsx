@@ -4,12 +4,12 @@ import { useEffect } from "react";
 import HeroSection from "@/components/landing/hero";
 import AgentsSection from "@/components/landing/agents";
 
-import { useGetCollectionData } from "@/hooks/useGetCollectionData";
+// import { useGetCollectionData } from "@/hooks/useGetCollectionData";
 
 import { Header } from "@/components/Header";
 
 export function Mint() {
-  const { data, isLoading } = useGetCollectionData();
+  // const { data, isLoading } = useGetCollectionData();
 
   const queryClient = useQueryClient();
   const { account } = useWallet();
@@ -17,13 +17,13 @@ export function Mint() {
     queryClient.invalidateQueries();
   }, [account, queryClient]);
 
-  if (isLoading) {
-    return (
-      <div className="text-center p-8">
-        <h1 className="title-md">Loading...</h1>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="text-center p-8">
+  //       <h1 className="title-md">Loading...</h1>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>

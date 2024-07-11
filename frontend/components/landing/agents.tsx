@@ -1,4 +1,3 @@
-import React from "react";
 import { OrbitingCirclesAgents } from "@/components/landing/circle";
 
 export default function AgentsSection() {

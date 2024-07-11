@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Button } from "../ui/button";
 
@@ -7,11 +7,11 @@ const Model = () => {
   const { scene } = useGLTF("/robo.glb");
   const modelRef = useRef();
 
-  useFrame((_state, delta) => {
-    if (modelRef.current) {
-    //   modelRef.current.rotation.y += delta * 0.2; 
-    }
-  });
+//   useFrame((_state, delta) => {
+//     if (modelRef.current) {
+//     //   modelRef.current.rotation.y += delta * 0.2; 
+//     }
+//   });
 
   return <primitive ref={modelRef} object={scene} scale={[2, 2, 2]} />;
 };
