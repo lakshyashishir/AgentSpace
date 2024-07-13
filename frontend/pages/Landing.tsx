@@ -8,7 +8,7 @@ import AgentsSection from "@/components/landing/agents";
 
 import { Header } from "@/components/Header";
 
-export function Mint() {
+export default function LandingPage() {
   // const { data, isLoading } = useGetCollectionData();
 
   const queryClient = useQueryClient();

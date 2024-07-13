@@ -1,13 +1,18 @@
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
-
-import { Mint } from "@/pages/Mint";
 import { CreateCollection } from "@/pages/CreateCollection";
 import { MyCollections } from "@/pages/MyCollections";
+import Workflows from "@/pages/Workflows";
+import Agents from "@/pages/Agents";
+import Marketplace from "@/pages/Marketplace";
+import Profile from "@/pages/Profile";
+import LandingPage from "./pages/Landing";
 
 function Layout() {
   return (
     <>
-      <Outlet />
+      <main className="container mx-auto p-4">
+        <Outlet />
+      </main>
     </>
   );
 }
@@ -18,7 +23,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Mint />,
+        element: <LandingPage />,
       },
       {
         path: "create-collection",
@@ -27,6 +32,22 @@ const router = createBrowserRouter([
       {
         path: "my-collections",
         element: <MyCollections />,
+      },
+      {
+        path: "workflows",
+        element: <Workflows />,
+      },
+      {
+        path: "agents",
+        element: <Agents />,
+      },
+      {
+        path: "marketplace",
+        element: <Marketplace />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
     ],
   },

@@ -28,11 +28,14 @@ export function Header() {
             <div className="flex flex-col gap-4">
               {IS_DEV && (
                 <>
-                  <Link className={buttonVariants({ variant: "link" })} to={"/my-collections"} onClick={() => setIsOpen(false)}>
-                    My Collections
+                  <Link className={buttonVariants({ variant: "link" })} to={"/agents"}>
+                    My Agents
                   </Link>
-                  <Link className={buttonVariants({ variant: "link" })} to={"/create-collection"} onClick={() => setIsOpen(false)}>
-                    Create Collection
+                  <Link className={buttonVariants({ variant: "link" })} to={"/workflows"}>
+                    Workflows
+                  </Link>
+                  <Link className={buttonVariants({ variant: "link" })} to={"/marketplace"}>
+                    Marketplace
                   </Link>
                 </>
               )}
@@ -45,11 +48,14 @@ export function Header() {
       <div className="hidden md:flex gap-2 items-center flex-wrap">
         {IS_DEV && (
           <>
-            <Link className={buttonVariants({ variant: "link" })} to={"/my-collections"}>
-              My Collections
+            <Link className={buttonVariants({ variant: "link" })} to={"/agents"}>
+              My Agents
             </Link>
-            <Link className={buttonVariants({ variant: "link" })} to={"/create-collection"}>
-              Create Collection
+            <Link className={buttonVariants({ variant: "link" })} to={"/workflows"}>
+              Workflows
+            </Link>
+            <Link className={buttonVariants({ variant: "link" })} to={"/marketplace"}>
+              Marketplace
             </Link>
           </>
         )}
