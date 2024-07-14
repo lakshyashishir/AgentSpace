@@ -9,14 +9,26 @@ const api = axios.create({
 
 // Profile
 export const getProfile = async (address: string) => {
-  const response = await api.get(`/users/${address}`);
-  return response.data;
-};
-
-export const updateProfile = async (data: { address: string; username: string; bio: string }) => {
-  const response = await api.put(`/users/${data.address}`, { username: data.username, bio: data.bio });
-  return response.data;
-};
+    try {
+      const response = await api.get(`/users/profile/${address}`);
+      return response.data;
+    } catch (error: any) {
+      if (error.response && error.response.status === 204) {
+        return null;
+      }
+      throw error;
+    }
+  };
+  
+  export const updateProfile = async (data: { address: string; username: string; }) => {
+    const response = await api.put(`/users/profile/${data.address}`, { username: data.username });
+    return response.data;
+  };
+  
+  export const createProfile = async (data: { address: string; username: string; }) => {
+    const response = await api.post('/users/profile', data);
+    return response.data;
+  };
 
 // Workflows
 export const getWorkflows = async () => {

@@ -13,6 +13,8 @@ import { useLocation } from "react-router-dom";
 import { ChevronDown, Copy, LogOut, User } from "lucide-react";
 import { useCallback, useState } from "react";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -27,6 +29,7 @@ import { useToast } from "@/components/ui/use-toast";
 export function WalletSelector() {
   const { account, connected, disconnect, wallet } = useWallet();
   const { toast } = useToast();
+  const { loginUser, logoutUser } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const closeDialog = useCallback(() => setIsDialogOpen(false), []);
@@ -48,6 +51,11 @@ export function WalletSelector() {
     }
   }, [account?.address, toast]);
 
+  const handleDisconnect = useCallback(() => {
+    disconnect();
+    logoutUser();
+  }, [logoutUser, disconnect]);
+
   return connected ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -64,7 +72,7 @@ export function WalletSelector() {
             </a>
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem onSelect={disconnect} className="gap-2">
+        <DropdownMenuItem onSelect={handleDisconnect} className="gap-2">
           <LogOut className="h-4 w-4" /> Disconnect
         </DropdownMenuItem>
       </DropdownMenuContent>
