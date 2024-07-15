@@ -1,5 +1,5 @@
-// api.ts
 import axios from 'axios';
+import { Agent } from '@/types/Agent';
 
 const API_URL = 'http://localhost:3002/api';
 
@@ -42,19 +42,24 @@ export const createWorkflow = async (data: { name: string; description: string }
 };
 
 // Agents
-export const getAgents = async () => {
+export const getAgents = async (): Promise<Agent[]> => {
   const response = await api.get('/agents');
   return response.data;
 };
 
-export const executeAgent = async (agentId: string, input: any) => {
-  const response = await api.post(`/agents/${agentId}/execute`, { input });
+export const executeAgent = async (id: string, input: string): Promise<{ result: string }> => {
+  const response = await axios.post(`${API_URL}/agents/execute`, { agent_id: id, input, userId: "2da70a10-af19-45d1-a1a3-3d6979edc045" });
+  return response.data;
+};
+
+export const getAgent = async (id: string): Promise<Agent> => {
+  const response = await axios.get(`${API_URL}/agents/${id}`);
   return response.data;
 };
 
 // Marketplace
 export const getMarketplaceItems = async () => {
-  const response = await api.get('/marketplace');
+  const response = await api.get('/marketplace/list');
   return response.data;
 };
 

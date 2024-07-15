@@ -6,6 +6,7 @@ import Agents from "@/pages/Agents";
 import Marketplace from "@/pages/Marketplace";
 import Profile from "@/pages/Profile";
 import LandingPage from "./pages/Landing";
+import AgentExecution from "./pages/AgentExecution";
 
 function Layout() {
   return (
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "agents",
         element: <Agents />,
+      },
+      {
+        path: "agent/:agentId",
+        element: <AgentExecution />,
       },
       {
         path: "marketplace",

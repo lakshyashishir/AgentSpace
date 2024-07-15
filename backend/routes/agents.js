@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const amqp = require('amqplib');
 
-// Existing routes
 router.get('/', async (req, res) => {
   const { data, error } = await req.supabase
     .from('agents')
@@ -46,40 +44,39 @@ router.post('/execute', async (req, res) => {
 
   try {
     // Fetch agent details from Supabase
-    const { data: agentData, error: agentError } = await req.supabase
-      .from('agents')
-      .select('*')
-      .eq('id', agent_id)
-      .single();
+    // const { data: agentData, error: agentError } = await req.supabase
+    //   .from('agents')
+    //   .select('*')
+    //   .eq('id', agent_id)
+    //   .single();
 
-    if (agentError) throw new Error(agentError.message);
-    if (!agentData) throw new Error('Agent not found');
+    // if (agentError) throw new Error(agentError.message);
+    // if (!agentData) throw new Error('Agent not found');
 
-    // Connect to RabbitMQ
-    const connection = await amqp.connect('amqp://localhost');
-    const channel = await connection.createChannel();
-    const q = await channel.assertQueue('', { exclusive: true });
+    const taskId = "234";
 
-    const correlationId = generateUuid();
-
-    channel.consume(q.queue, (msg) => {
-      if (msg.properties.correlationId === correlationId) {
-        const result = JSON.parse(msg.content.toString());
-        res.json(result);
-        setTimeout(() => connection.close(), 500);
-      }
-    }, { noAck: true });
-
-    // Send message to AI service
-    channel.sendToQueue('ai_tasks', Buffer.from(JSON.stringify({
-      agent_type: agentData.type,
-      input: input,
+    // Emit task to Socket.IO
+    req.io.emit('ai_task', {
+      agent_type: "article_summarizer",
+      input: "What is the capital of France?",
       user_id: userId,
-      agent_config: agentData.config // Include any agent-specific configuration
-    })), {
-      correlationId: correlationId,
-      replyTo: q.queue
+      agent_config: "{}",
+      task_id: taskId
     });
+
+    // Wait for the result
+    const result = await new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Task execution timed out'));
+      }, 300000); // 5 minutes timeout
+
+      req.io.once(`ai_result_${taskId}`, (data) => {
+        clearTimeout(timeout);
+        resolve(data);
+      });
+    });
+
+    res.json(result);
 
   } catch (error) {
     console.error('Error executing agent:', error);

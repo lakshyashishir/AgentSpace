@@ -3,3 +3,7 @@ langchain
 openai
 youtube-transcript-api
 pika
+socketio
+python-socketio[client]==5.7.2
+python-dotenv==0.19.2
+importlib-metadata==4.8.3
