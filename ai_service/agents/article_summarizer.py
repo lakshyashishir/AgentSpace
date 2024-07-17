@@ -1,11 +1,17 @@
-from langchain import LLMChain, PromptTemplate
-from langchain.chat_models import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
+from langchain.chains import LLMChain
+from langchain_openai import ChatOpenAI
 from langchain.chains.summarize import load_summarize_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def create_agent(config):
-    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k")
+    openai_api_key = config.get('OPENAI_API_KEY')
     
+    if not openai_api_key:
+        raise ValueError("Missing `OPENAI_API_KEY` in the configuration")
+
+    llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-16k", openai_api_key=openai_api_key)
+
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=10000,
         chunk_overlap=200,

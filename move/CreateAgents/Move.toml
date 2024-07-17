@@ -1,0 +1,11 @@
+[package]
+name = "CreateAgents"
+version = "1.0.0"
+authors = ["Lakshya"]
+
+[addresses]
+AgentSpace = "0x0ccaece84eff0a373aeb954902e73a015dbca50abdfab0f909a06e3d71ca8e2e"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "testnet", subdir = "aptos-move/framework/aptos-framework" }
+AgentRegistry = { local = "../AgentRegistry" }

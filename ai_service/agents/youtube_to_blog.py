@@ -1,20 +1,26 @@
 from crewai import Agent, Task, Crew
+from langchain.llms import OpenAI
 from tools.youtube_tools import fetch_transcript, analyze_video
 from tools.text_processing_tools import summarize_text, generate_blog_post
 
 def create_agent(config):
+    openai_api_key = config.get('openai_api_key')
+    llm = OpenAI(temperature=0.7, openai_api_key=openai_api_key)
+
     researcher = Agent(
         role='Researcher',
         goal='Analyze YouTube video content',
         backstory='You are an AI research assistant specialized in video content analysis',
-        tools=[fetch_transcript, analyze_video]
+        tools=[fetch_transcript, analyze_video],
+        llm=llm
     )
     
     writer = Agent(
         role='Writer',
         goal='Create engaging blog posts from video content',
         backstory='You are an AI writing assistant that excels at creating blog content',
-        tools=[summarize_text, generate_blog_post]
+        tools=[summarize_text, generate_blog_post],
+        llm=llm
     )
 
     task1 = Task(

@@ -1,10 +1,10 @@
 from youtube_transcript_api import YouTubeTranscriptApi
-import re
 
 def fetch_transcript(video_url):
     video_id = extract_video_id(video_url)
     try:
         transcript = YouTubeTranscriptApi.get_transcript(video_id)
+        print(transcript)
         return " ".join([entry['text'] for entry in transcript])
     except Exception as e:
         return f"Error fetching transcript: {str(e)}"

@@ -3,6 +3,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useEffect } from "react";
 import HeroSection from "@/components/landing/hero";
 import AgentsSection from "@/components/landing/agents";
+import AllAgentsSection from "@/components/landing/allAgents";
 
 // import { useGetCollectionData } from "@/hooks/useGetCollectionData";
 
@@ -31,6 +32,7 @@ export default function LandingPage() {
         <Header />
         <HeroSection />
         <AgentsSection />
+        <AllAgentsSection />
       </div>
     </>
   );

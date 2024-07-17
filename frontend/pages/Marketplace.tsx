@@ -1,10 +1,14 @@
+import React from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getMarketplaceItems, purchaseItem } from "@/services/api";
+import { getMarketplaceItems } from "@/services/api";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/components/ui/use-toast";
 import { Header } from "@/components/Header";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { aptosClient } from "@/utils/aptosClient";
+import { buyAgent } from "@/entry-functions/marketplace";
 
 interface MarketplaceItem {
   id: string;
@@ -19,26 +23,34 @@ interface MarketplaceItem {
 
 export default function Marketplace() {
   const { toast } = useToast();
+  const { signAndSubmitTransaction } = useWallet();
 
   const { data: items, isLoading: isItemsLoading } = useQuery<MarketplaceItem[]>({
     queryKey: ["marketplaceItems"],
     queryFn: getMarketplaceItems,
   });
 
-  console.log(items);
+  const handlePurchase = async (itemId: string) => {
+    try {
+      const payload = buyAgent({ agentId: itemId });
+      const response = await signAndSubmitTransaction(payload);
+      const committedTransactionResponse = await aptosClient().waitForTransaction({
+        transactionHash: response.hash,
+      });
 
-  const purchaseItemMutation = useMutation({
-    mutationFn: purchaseItem,
-    onSuccess: () => {
-      toast({ title: "Agent purchased successfully" });
-    },
-    onError: () => {
-      toast({ title: "Failed to purchase agent", variant: "destructive" });
-    },
-  });
-
-  const handlePurchase = (itemId: string) => {
-    purchaseItemMutation.mutate(itemId);
+      if (committedTransactionResponse.success) {
+        toast({ title: "Agent purchased successfully" });
+      } else {
+        throw new Error("Transaction failed");
+      }
+    } catch (error) {
+      console.error("Error purchasing agent:", error);
+      toast({ 
+        title: "Failed to purchase agent", 
+        description: error.message || "An error occurred while purchasing the agent",
+        variant: "destructive" 
+      });
+    }
   };
 
   if (isItemsLoading) return (

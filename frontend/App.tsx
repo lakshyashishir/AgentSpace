@@ -5,8 +5,10 @@ import Workflows from "@/pages/Workflows";
 import Agents from "@/pages/Agents";
 import Marketplace from "@/pages/Marketplace";
 import Profile from "@/pages/Profile";
-import LandingPage from "./pages/Landing";
-import AgentExecution from "./pages/AgentExecution";
+import LandingPage from "@/pages/Landing";
+import AgentExecution from "@/pages/AgentExecution";
+import BuyAGCN from "@/pages/AgentCoin";
+import CreateAgent from "@/pages/CreateAgent";
 
 function Layout() {
   return (
@@ -53,6 +55,14 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "agentcoin",
+        element: <BuyAGCN />,
+      },
+      {
+        path: "create-agent",
+        element: <CreateAgent />,
       },
     ],
   },

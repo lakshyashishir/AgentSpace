@@ -33,6 +33,9 @@ export function Header() {
                   <Link className={buttonVariants({ variant: "link" })} to={"/agents"}>
                     My Agents
                   </Link>
+                  <Link className={buttonVariants({ variant: "link" })} to={"/agentcoin"}>
+                    Buy AGCN
+                  </Link>
                   <Link className={buttonVariants({ variant: "link" })} to={"/workflows"}>
                     Workflows
                   </Link>
@@ -52,6 +55,9 @@ export function Header() {
           <>
             <Link className={buttonVariants({ variant: "link" })} to={"/agents"}>
               My Agents
+            </Link>
+            <Link className={buttonVariants({ variant: "link" })} to={"/agentcoin"}>
+              Buy AGCN
             </Link>
             <Link className={buttonVariants({ variant: "link" })} to={"/workflows"}>
               Workflows

@@ -26,7 +26,11 @@ module AgentSpace::AgentRegistry {
         create_agent_events: event::EventHandle<AgentCreatedEvent>,
     }
 
+    const E_ALREADY_INITIALIZED: u64 = 1;
+
     public entry fun initialize(account: &signer) {
+        let account_addr = signer::address_of(account);
+        assert!(!exists<AgentStore>(account_addr), E_ALREADY_INITIALIZED);
         let agent_store = AgentStore {
             agents: vector::empty(),
             create_agent_events: account::new_event_handle<AgentCreatedEvent>(account),
@@ -34,42 +38,53 @@ module AgentSpace::AgentRegistry {
         move_to(account, agent_store);
     }
 
-    public entry fun create_agent(
-        creator: &signer,
-        id: String,
-        name: String,
-        description: String,
-        agent_type: String,
-        price: u64,
-        execution_cost: u64
-    ) acquires AgentStore {
-        let creator_address = signer::address_of(creator);
-        let agent = Agent {
-            id,
-            name,
-            description,
-            agent_type,
-            creator: creator_address,
-            price,
-            execution_cost,
-        };
-
-        let constructor_ref = object::create_named_object(creator, *string::bytes(&id));
-        let agent_obj = object::object_from_constructor_ref<Agent>(&constructor_ref);
-        let signer = object::generate_signer(&constructor_ref);
-        move_to(&signer, agent);
-
-        let agent_store = borrow_global_mut<AgentStore>(creator_address);
-        vector::push_back(&mut agent_store.agents, agent_obj);
-
-        event::emit_event(
-            &mut agent_store.create_agent_events,
-            AgentCreatedEvent {
-                agent_id: id,
-                creator: creator_address,
-            },
-        );
+    public fun is_initialized(account: address): bool {
+        exists<AgentStore>(account)
     }
+
+    public entry fun create_agent(
+    creator: &signer,
+    id: String,
+    name: String,
+    description: String,
+    agent_type: String,
+    price: u64,
+    execution_cost: u64
+) acquires AgentStore {
+    let creator_address = signer::address_of(creator);
+    let agent = Agent {
+        id,
+        name,
+        description,
+        agent_type,
+        creator: creator_address,
+        price,
+        execution_cost,
+    };
+
+    let constructor_ref = object::create_named_object(creator, *string::bytes(&id));
+    let agent_obj = object::object_from_constructor_ref<Agent>(&constructor_ref);
+    let signer = object::generate_signer(&constructor_ref);
+    move_to(&signer, agent);
+
+    if (!exists<AgentStore>(creator_address)) {
+        move_to(creator, AgentStore {
+            agents: vector::empty(),
+            create_agent_events: account::new_event_handle<AgentCreatedEvent>(creator),
+        });
+    };
+
+    let agent_store = borrow_global_mut<AgentStore>(creator_address);
+    vector::push_back(&mut agent_store.agents, agent_obj);
+
+    event::emit_event(
+        &mut agent_store.create_agent_events,
+        AgentCreatedEvent {
+            agent_id: id,
+            creator: creator_address,
+        },
+    );
+}
 
     #[view]
     public fun get_all_agents(): vector<Object<Agent>> acquires AgentStore {

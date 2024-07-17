@@ -64,11 +64,15 @@ router.post('/execute', async (req, res) => {
       task_id: taskId
     });
 
+    console.log("1")
+
     // Wait for the result
     const result = await new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         reject(new Error('Task execution timed out'));
-      }, 300000); // 5 minutes timeout
+      }, 3000000); // 50 minutes timeout
+
+      console.log("2")
 
       req.io.once(`ai_result_${taskId}`, (data) => {
         clearTimeout(timeout);
